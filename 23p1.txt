@@ -1,0 +1,123 @@
+
+package mypack.cbac;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import mypack.cbac.RegisterDoctor.AddEmp;
+import mypack.others.JSONParser;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.app.Activity; 
+import android.app.ProgressDialog;
+import android.util.Log;
+import android.view.Menu;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
+public class RegPatientActivity extends Activity {
+	EditText id,name,desi,qualif,mail,address,phone,password;
+	Spinner spspecialist;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_reg_patient);
+		
+		id=(EditText) findViewById(R.id.editText1);
+		name=(EditText) findViewById(R.id.editText2);
+		desi=(EditText) findViewById(R.id.editText3);
+		qualif=(EditText) findViewById(R.id.editText7);
+		mail=(EditText) findViewById(R.id.editText4);
+		address=(EditText) findViewById(R.id.editText5);
+		phone=(EditText) findViewById(R.id.editText6);
+		password=(EditText) findViewById(R.id.editText8);
+		
+	}
+	public void onSave(View v)
+	{
+		if(id.getText().toString().equals("") || name.getText().toString().equals("") || desi.getText().toString().equals("") || mail.getText().toString().equals("") ||phone.getText().toString().equals("") ||address.getText().toString().equals("") ||password.getText().toString().equals(""))
+			Toast.makeText(RegPatientActivity.this, "Enter All Fields", Toast.LENGTH_SHORT).show();
+		else 
+			new AddEmp().execute();
+	}
+	public void onReset(View v)
+	{
+		id.setText("");name.setText("");desi.setText("");mail.setText("");phone.setText("");password.setText("");
+	}
+	class AddEmp extends AsyncTask<String, String, JSONObject> {
+		ProgressDialog pDialog;
+		JSONParser jsonParser=new JSONParser();
+		String url=getResources().getString(R.string.url)+"regpatient.php";
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		ArrayList<HashMap<String, String>> list;
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			Log.d("progress dialog", "executed");
+			pDialog = new ProgressDialog(RegPatientActivity.this);
+			pDialog.setMessage("Loading...");
+			pDialog.setIndeterminate(false);
+			pDialog.setCancelable(true);
+			pDialog.show();
+		}
+
+		
+		protected JSONObject doInBackground(String... param) {
+			 
+			// updating UI from Background Thread
+			Log.d("do in bg", "executed");
+			list=new ArrayList<HashMap<String,String>>();
+					params.add(new BasicNameValuePair("id", id.getText().toString()));
+					params.add(new BasicNameValuePair("name", name.getText().toString()));
+					params.add(new BasicNameValuePair("desig", desi.getText().toString()));
+					params.add(new BasicNameValuePair("qualif", qualif.getText().toString()));
+					params.add(new BasicNameValuePair("specialistin", spspecialist.getSelectedItem().toString()));
+					params.add(new BasicNameValuePair("mail",mail.getText().toString()));
+					params.add(new BasicNameValuePair("phone", phone.getText().toString()));
+					params.add(new BasicNameValuePair("pswd", password.getText().toString()));
+					
+					return jsonParser.makeHttpRequest(url, "POST", params);
+		}
+
+
+		protected void onPostExecute(final JSONObject json) {
+			// TODO Auto-generated method stub
+			runOnUiThread(new Runnable() {
+				public void run() {
+					// Check for success tag
+			try {
+				int success = json.getInt("success");
+				pDialog.dismiss();
+				if (success == 1) {
+					Toast.makeText(RegPatientActivity.this, "Registration Success", Toast.LENGTH_SHORT).show();
+					finish();
+				} else {
+					Toast.makeText(RegPatientActivity.this, "Failed to register", Toast.LENGTH_SHORT).show();
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			
+				}
+				});
+		}
+	}
+	
+	
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.reg_patient, menu);
+		return true;
+	}
+
+}
