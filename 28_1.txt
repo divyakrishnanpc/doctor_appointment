@@ -1,0 +1,154 @@
+package patappoinment;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+
+
+import patappoinment.ManageEmp.GetAllEmp;
+
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.util.Log;
+import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemLongClickListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.util.Log;
+import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
+
+public class PatAppoinmentViewActivity extends Activity {
+	ListView lv;
+	String sid;
+	String uid;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_pat_appoinment_view);
+		Intent i = getIntent();
+		uid= i.getStringExtra("patid");
+				
+		lv=(ListView) findViewById(R.id.listView1);
+		new GetAllEmp().execute();
+	}
+
+/*	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.activity_pat_appoinment_view, menu);
+		return true;
+	} */
+	class GetAllEmp extends AsyncTask<String, String, Object> {
+		ProgressDialog pDialog;
+	
+		String url=getResources().getString(R.string.url)+"patviewppoinment.php";
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		ArrayList<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			Log.d("progress dialog", "executed");
+			pDialog = new ProgressDialog(PatAppoinmentViewActivity.this);
+			pDialog.setMessage("Fetching...");
+			pDialog.setIndeterminate(false);
+			pDialog.setCancelable(true);
+			pDialog.show();
+		}
+
+		
+		protected Object doInBackground(String... param) {
+			 
+			// updating UI from Background Thread
+			Log.d("do in bg", "executed");
+			list=new ArrayList<HashMap<String,String>>();		
+			params.add(new BasicNameValuePair("patid", uid.toString()));		
+			return Parser.makeHttpRequest(url, "POST", params);
+		}
+
+
+		protected void onPostExecute(final Object jobj) {
+			// TODO Auto-generated method stub
+			runOnUiThread(new Runnable() {
+				public void run() {
+					// Check for success tag
+			try {
+				int success = json.getInt("success");
+				pDialog.dismiss();
+				if (success == 1) {
+					//Toast.makeText(SetPrivileges.this, "Restriction Saved Successfully", Toast.LENGTH_SHORT).show();
+					Array Array=getArray("user");
+					
+					for(int i=0;i<Array.length();i++)
+					{
+						Object object=Array.getObject(i);
+						HashMap<String, String> map=new HashMap<String, String>();
+						map.put("sno", Object.getString("sno"));
+						map.put("empid", Object.getString("empid"));
+						map.put("name", Object.getString("name"));
+						map.put("mail", Object.getString("mail"));
+						map.put("desi", Object.getString("desi"));
+						map.put("phone",Object.getString("phone"));						
+						list.add(map);
+					}
+				
+				} else {
+					Toast.makeText(PatAppoinmentViewActivity.this, "Failed to Fetch Appoinment", Toast.LENGTH_SHORT).show();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+				}
+				});
+			String[] from={"sno","empid","name","mail","desi","phone"};
+			int[] to={R.id.id,R.id.empid,R.id.name,R.id.mail,R.id.desi,R.id.phone};
+			ListAdapter adapter=new SimpleAdapter(PatAppoinmentViewActivity.this, list, R.layout.customemp, from, to);
+			lv.setAdapter(adapter);
+			lv.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+				@Override
+				public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+						int arg2, long arg3) {
+					// TODO Auto-generated method stub
+					TextView tv=(TextView) arg1.findViewById(R.id.id);
+					sid=tv.getText().toString();
+					Intent i=new Intent(PatAppoinmentViewActivity.this, GetSingleEmp.class);
+					i.putExtra("id", sid);
+					startActivity(i);
+					finish();
+					return false;
+				}
+			});
+			
+		}
+	}	
+}	
