@@ -1,0 +1,42 @@
+<?php
+include_once 'dbconn.php';
+/*
+ * Following code will create a new product row
+ * All product details are read from HTTP Post Request
+ */
+
+// array for JSON response
+$response = array();
+
+// check for required fields
+if (isset($_GET['sno'])) {
+	$sno=$_POST['sno'];	
+	
+    // mysql inserting a new row
+    $result = mysql_query("DELETE FROM emp  WHERE sno='$sno'");
+
+    // check if row inserted or not
+    if ($result) {
+        // successfully inserted into database
+        $response["success"] = 1;
+        $response["message"] = " successfully deleted.";
+
+        // echoing JSON response
+        echo json_encode($response);
+    } else {
+        // failed to insert row
+        $response["success"] = 0;
+        $response["message"] = mysql_error();
+        
+        // echoing JSON response
+        echo json_encode($response);
+    }
+} else {
+    // required field is missing
+    $response["success"] = 0;
+    $response["message"] = "Value missing";
+
+    // echoing JSON response
+    echo json_encode($response);
+}
+?>
