@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="mypack.cbac"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="18" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/cbac"
+        android:label="@string/app_name"
+        android:theme="@style/CbacTheme" >
+        <activity
+            android:name="patappoinment.MainActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="patappoinment.DoctorLogin"
+            android:label="@string/title_activity_admin_login" >
+        </activity>
+        <activity
+            android:name="patappoinment.UserLogin"
+            android:label="@string/title_activity_user_login" >
+        </activity>
+        <activity
+            android:name="patappoinment.AdminRights"
+            android:label="@string/title_activity_admin_rights" >
+        </activity>
+        <activity
+            android:name="patappoinment.SaveLocation"
+            android:label="@string/title_activity_save_location" >
+        </activity>
+        <activity
+            android:name="patappoinment.RegisterDoctor"
+            android:label="@string/title_activity_add_employee" >
+        </activity>
+        <activity
+            android:name="patappoinment.ManageEmployee"
+            android:label="@string/title_activity_manage_employee" >
+        </activity>
+        <activity
+            android:name="patappoinment.ManageEmp"
+            android:label="@string/title_activity_manage_emp" >
+        </activity>
+        <activity
+            android:name="mypack.user.AlertActivity"
+            android:label="@string/title_activity_manage_emp"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity android:name="patappoinment.SetPrivileges" >
+        </activity>
+        <activity android:name="patappoinment.ActivatePolicy" >
+        </activity>
+        <activity android:name="patappoinment.ViewPolicy" >
+        </activity>
+
+        <receiver android:name="mypack.others.CheckLocation" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="StartupReceiver_Manual_Start" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name="patappoinment.GetSingleEmp"
+            android:label="@string/title_activity_get_single_emp" >
+        </activity>
+        <activity
+            android:name="patappoinment.AboutApp"
+            android:label="@string/title_activity_about_app" >
+        </activity>
+        <activity
+            android:name="patappoinment.LogoActicity"
+            android:label="CBAC" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="patappoinment.RegPatientActivity"
+            android:label="@string/title_activity_reg_patient" >
+        </activity>
+        <activity
+            android:name="patappoinment.PatHomeActivity"
+            android:label="@string/title_activity_pat_home" >
+        </activity>
+        <activity
+            android:name="patappoinment.PatAppoinmemtActivity"
+            android:label="@string/title_activity_pat_appoinmemt" >
+        </activity>
+        <activity
+            android:name="patappoinment.PatAppoinmentViewActivity"
+            android:label="@string/title_activity_pat_appoinment_view" >
+        </activity>
+        <activity
+            android:name="patappoinment.AddScheduleActivity"
+            android:label="@string/title_activity_add_schedule" >
+        </activity>
+        <activity
+            android:name="patappoinment.ViewScheduleActivity"
+            android:label="@string/title_activity_view_schedule" >
+        </activity>
+        <activity
+            android:name="patappoinment.DocCancelActivity"
+            android:label="@string/title_activity_doc_cancel" >
+        </activity>
+        <activity
+            android:name="patappoinment.PatCancelActivity"
+            android:label="@string/title_activity_pat_cancel" >
+        </activity>
+    </application>
+
+</manifest>
